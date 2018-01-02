@@ -4,7 +4,8 @@ LDFLAGS = -lglfw3 -lGL -lm -ldl -lXinerama -lXrandr -lXi \
 -lXcursor -lX11 -lXxf86vm -lpthread -lglut -lGL -lGLU
 
 DIR = src
-SOURCE = ${addprefix ${DIR}/, glad.c main.cc drawHandler.cc shaderHandler.cc}
+SOURCE = ${addprefix ${DIR}/, glad.c main.cc drawHandler.cc shaderHandler.cc \
+window.cc camera.cc input.cc}
 
 INC_DIR = inc/
 OBJ = $(SOURCE:%.cc=%.o)

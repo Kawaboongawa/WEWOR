@@ -28,7 +28,6 @@ DrawHandler::DrawHandler()
   glVertexAttribPointer(colattrib, 3, GL_FLOAT, GL_FALSE, 
   5 * sizeof (float), (void*) (2 * sizeof (float)));
   basicShader_.use();
-
 }
 
 void DrawHandler::draw(void)

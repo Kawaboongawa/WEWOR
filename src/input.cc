@@ -1,0 +1,83 @@
+#include "input.hh"
+#include <iostream>
+
+float Input::lastX_ = 0.f;
+float Input::lastY_ = 0.f;
+float Input::deltaTime = 0.0f;
+float Input::lastFrame = 0.0f;
+bool Input::first_mouse_ = true;
+bool Input::terminate_ = false;
+
+void Input::init(Camera *camera, unsigned int width, unsigned int height)
+{
+    camera_ = camera;
+    lastX_ = width / 2.0f;
+    lastY_ = height / 2.0f;
+
+}
+
+Camera *Input::get_camera()
+{
+    return camera_;
+}
+
+Input& Input::get_instance()
+{
+    static Input instance;
+    return instance;
+}
+
+void Input::process_input(GLFWwindow *window)
+{
+    auto camera = get_instance().get_camera();
+
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, true);
+        terminate_ = true;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        camera->boosted(100.0f);
+    else
+        camera->boosted(25.0);
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera->process_keyboard(Camera::Camera_movement::FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera->process_keyboard(Camera::Camera_movement::BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera->process_keyboard(Camera::Camera_movement::LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera->process_keyboard(Camera::Camera_movement::RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+        camera->process_keyboard(Camera::Camera_movement::DOWN, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        camera->process_keyboard(Camera::Camera_movement::UP, deltaTime);
+}
+
+void Input::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    auto camera = get_instance().get_camera();
+
+    if (first_mouse_)
+    {
+        lastX_ = xpos;
+        lastY_ = ypos;
+        first_mouse_ = false;
+    }
+
+    float xoffset = xpos - lastX_;
+    float yoffset = lastY_ - ypos;
+    lastX_ = xpos;
+    lastY_ = ypos;
+
+    camera->process_mouse_movement(xoffset, yoffset);
+}
+
+void Input::scroll_callback(GLFWwindow* window, double xoffset,
+                            double yoffset)
+{
+    auto camera = get_instance().get_camera();
+
+    camera->process_mouse_scroll(yoffset);
+}
