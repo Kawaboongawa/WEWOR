@@ -64,7 +64,6 @@ int Window::render_loop(void)
         d_->draw();
         glfwSwapBuffers(window_);
         glfwPollEvents();
-
     }
     glfwTerminate();
     return 0;
