@@ -7,7 +7,7 @@ HeightmapHandler::HeightmapHandler(Shader shader, std::string path)
       vbo_(0),
       ebo_(0),
       indices_(std::vector<uint>()),
-      data_(std::vector<glm::vec3>()),
+      data_(std::vector<float>()),
       shader_(shader)
 {
     std::cout << "initializing heighmap handler..." << std::endl;
@@ -58,9 +58,12 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
             float scaleC = static_cast<float>(j) / static_cast<float>(cols_ - 1);
             float scaleR = static_cast<float>(i) / static_cast<float>(rows_ - 1);
             float vertex_height = static_cast<float>
-                                  (*(bDataPointer + row_step * i + j * ptr_inc)) / 10.0f;
+                                  (*(bDataPointer + row_step * i + j * ptr_inc)) / 10;
             vertex_data[i][j] = glm::vec3(i,
                                           vertex_height, j);
+            data_.push_back(i);
+            data_.push_back(vertex_height);
+            data_.push_back(j);
             coords_data[i][j] = glm::vec2(textureU * scaleC,
                                           textureV * scaleR);
         }
@@ -140,12 +143,12 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
         }
     }
     */
-
+    /*
     for (uint i = 0; i < rows_; ++i)
     {
         for (uint j = 0; j < cols_; ++j)
             data_.push_back(vertex_data[i][j]);
-    }
+    }*/
 
     initIndices(rows_);
     glGenVertexArrays(1, &vao_);
@@ -157,7 +160,7 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
     glBindVertexArray(vao_);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferData(GL_ARRAY_BUFFER, data_.size() * sizeof(glm::vec3), &data_[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, data_.size() * sizeof(float), &data_[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(uint), &indices_[0], GL_STATIC_DRAW);
@@ -206,7 +209,7 @@ void HeightmapHandler::RenderHeightmap(glm::mat4 projection_mat,
     //glEnable(GL_PRIMITIVE_RESTART);
     //glPrimitiveRestartIndex(rows_ * cols_);
 
-    glDrawElements(GL_TRIANGLE_STRIP, indices_.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
 }
 
 void HeightmapHandler::initIndices(int size)

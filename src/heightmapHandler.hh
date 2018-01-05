@@ -49,7 +49,7 @@ private:
     uint ebo_;
 
     std::vector<uint> indices_;
-    std::vector<glm::vec3> data_;
+    std::vector<float> data_;
 
     Shader shader_;
 

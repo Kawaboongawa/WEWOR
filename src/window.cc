@@ -53,6 +53,9 @@ int Window::init_render()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return 1;
     }
+
+    glEnable(GL_DEPTH_TEST);  
+
     d_ = new DrawHandler();
     return 0;
 }
