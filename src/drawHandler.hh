@@ -7,6 +7,7 @@
 
 #include "heightmapHandler.hh"
 #include "waterRenderer.hh"
+#include "skybox.hh"
 #include "shaderHandler.hh"
 #include "camera.hh"
 
@@ -19,13 +20,7 @@ public:
 
 private:
 
-    unsigned int vbo_;
-    unsigned int vao_;
-    
-    Shader waterShader_;
-    Shader heightmapShader_;
-
     HeightmapHandler heightmap_;
     WaterRenderer waterRenderer_;
-
+    Skybox skybox_;
 };

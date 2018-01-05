@@ -21,7 +21,7 @@ WaterRenderer::WaterRenderer(Shader shader, uint cols, uint rows)
             data_.push_back(static_cast<float>(z));
         }
   /*TEXTURE Initialization*/
-  textures_.push_back(load_texturegl("assets/water.jpg"));
+  textures_.push_back(loadTexturegl("assets/water.jpg"));
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textures_[0]);
    
