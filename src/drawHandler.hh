@@ -22,7 +22,7 @@ private:
     unsigned int vbo_;
     unsigned int vao_;
     
-    Shader basicShader_;
+    Shader waterShader_;
     Shader heightmapShader_;
 
     HeightmapHandler heightmap_;

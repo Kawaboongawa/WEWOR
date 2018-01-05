@@ -11,12 +11,12 @@ float vertices[] = {
 DrawHandler::DrawHandler()
   : vbo_(0),
   vao_(0),
-  basicShader_("shaders/basic.vs", "shaders/basic.fs"),
+  waterShader_("shaders/water.vs", "shaders/water.fs"),
   heightmapShader_("shaders/heightmap.vs", "shaders/heightmap.fs"),
   heightmap_(HeightmapHandler(heightmapShader_, "assets/height_map.jpg")),
-  waterRenderer_(WaterRenderer(heightmapShader_))
+  waterRenderer_(WaterRenderer(heightmapShader_, heightmap_.getCols(), heightmap_.getRows()))
 {
-  glGenVertexArrays(1, &vao_);
+  /*glGenVertexArrays(1, &vao_);
   glGenBuffers(1, &vbo_);
   glBindVertexArray(vao_);
   glBindBuffer(GL_ARRAY_BUFFER, vbo_);
@@ -25,7 +25,7 @@ DrawHandler::DrawHandler()
   int posattrib = glGetAttribLocation(basicShader_.ID, "position");
   glEnableVertexAttribArray(posattrib);
   glVertexAttribPointer(posattrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof (float), 0);
-  basicShader_.use();
+  basicShader_.use();*/
   /*int colattrib = glGetAttribLocation(basicShader_.ID, "color");
   glEnableVertexAttribArray(colattrib);
   glVertexAttribPointer(colattrib, 3, GL_FLOAT, GL_FALSE, 

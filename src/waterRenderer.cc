@@ -1,34 +1,31 @@
 #include "waterRenderer.hh"
 
-float vertices2[] = {
-     0.0f,  0.5f, 1.0f, 0.0f, 0.0f, // Vertex 1: Red
-     0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 2: Green
-    -0.5f, -0.5f, 0.0f, 0.0f, 1.0f  // Vertex 3: Blue
-};
+#include <iostream>
 
-WaterRenderer::WaterRenderer(Shader shader)
-:     vbo_(0),
-      ebo_(0),
+WaterRenderer::WaterRenderer(Shader shader, uint cols, uint rows)
+:     rows_(rows),
+      cols_(cols),
       indices_(std::vector<uint>()),
       data_(std::vector<float>()),
-      shader_(shader)
+      shader_(shader),
+      textures_(std::vector<uint>())
 {
 
-  rows_ = 10;
-  cols_ = 10;
-  std::vector<float> vertex_data;
-  for (uint i = 0; i < rows_; ++i)
-      for (uint j = 0; j < cols_; ++j)
+  for (uint z = 0; z < rows_; ++z)
+        for (uint x = 0; x < cols_; ++x)
         {
-            
-            //float scaleC = static_cast<float>(j) / static_cast<float>(cols_ - 1);
-            //float scaleR = static_cast<float>(i) / static_cast<float>(rows_ - 1);
-            data_.push_back(i);
-            data_.push_back(3);
-            data_.push_back(j);
+            data_.push_back(static_cast<float>(x));
+            data_.push_back(10);
+            data_.push_back(static_cast<float>(z));
+            data_.push_back(static_cast<float>(x));
+            data_.push_back(static_cast<float>(z));
         }
+  /*TEXTURE Initialization*/
+  textures_.push_back(load_texturegl("assets/water.jpg"));
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, textures_[0]);
+   
 
-  
   initIndices(rows_);
   glGenBuffers(1, &vbo_);
   glGenBuffers(1, &ebo_);
@@ -36,18 +33,24 @@ WaterRenderer::WaterRenderer(Shader shader)
   glBindVertexArray(vao_);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-  glBufferData(GL_ARRAY_BUFFER, data_.size(), &data_[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, data_.size() * sizeof (float), &data_[0], GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size(), &indices_[0], GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof (uint), &indices_[0], GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof (float), 0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (float), 0);
   glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void *)(sizeof (float) * 3));
+  glEnableVertexAttribArray(1);
+
 }
 
 void WaterRenderer::RenderWater(glm::mat4 projection_mat,
                                        glm::mat4 view_mat)
 {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textures_[0]);
+
     shader_.use();
 
     shader_.setMat4("projection", projection_mat);
@@ -57,19 +60,13 @@ void WaterRenderer::RenderWater(glm::mat4 projection_mat,
     model = glm::rotate(model, glm::radians(0.0f),
 			glm::vec3(1.0f, 0.0f, 0.0f));
     shader_.setMat4("model", model);
-    /*
-    shader_.setFloat("fRenderHeight", renderScale_.y);
-    shader_.setFloat("fMaxTextureU", float(cols_) * 0.1f);
-    shader_.setFloat("fMaxTextureV", float(rows_) * 0.1f);
+ 
+  //Water
+  shader_.setInt("texture1", 0);
 
-    shader_.setMat4("HeightmapScaleMatrix", glm::scale(glm::mat4(1.0), glm::vec3(renderScale_)));
-    */
-    // Now we're ready to render - we are drawing set of triangle strips using one call, but we g otta enable primitive restart
-    glBindVertexArray(vao_);
-    //glEnable(GL_PRIMITIVE_RESTART);
-    //glPrimitiveRestartIndex(rows_ * cols_);
+  glBindVertexArray(vao_);
 
-    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
 }
 
 void WaterRenderer::initIndices(int size)

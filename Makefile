@@ -6,7 +6,7 @@ LDFLAGS = -lglfw3 -lGL -lm -ldl -lXinerama -lXrandr -lXi \
 DIR = src
 SOURCE = ${addprefix ${DIR}/, glad.c main.cc drawHandler.cc shaderHandler.cc \
 window.cc camera.cc input.cc heightmapHandler.cc vertexBufferObject.cc \
-waterRenderer.cc}
+tools.cc waterRenderer.cc}
 
 INC_DIR = inc/
 OBJ = $(SOURCE:%.cc=%.o)

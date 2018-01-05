@@ -18,17 +18,4 @@ void main()
   vec4 position_relative_to_cam = view * world_position;
   gl_Position = projection * position_relative_to_cam;
   TexCoord = inTexCoord;
-
-  /*vec4 inPositionScaled = HeightmapScaleMatrix*vec4(inPosition, 1.0); 
-  mat4 mMVP = matrices.projMatrix*matrices.viewMatrix*matrices.modelMatrix; 
-    
-  gl_Position = mMVP*inPositionScaled; 
-  vEyeSpacePos = matrices.viewMatrix*matrices.modelMatrix*vec4(inPosition, 1.0); 
-   
-  vTexCoord = inCoord; 
-   vNormal = inNormal; 
-    
-  vec4 vWorldPosLocal = matrices.modelMatrix*inPositionScaled; 
-   vWorldPos = vWorldPosLocal.xyz; 
-   */
 }

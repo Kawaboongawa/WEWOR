@@ -9,7 +9,6 @@ Window::Window(int width, int height)
 
 Window::~Window()
 {
-    delete d_;
     delete camera_;
     glfwDestroyWindow(window_);
 }

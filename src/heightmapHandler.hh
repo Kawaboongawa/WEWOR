@@ -17,25 +17,16 @@ public:
 
     HeightmapHandler(Shader shader, std::string path);
 
-    // static void ReleaseTerrainShaderProgram();
-
     int LoadHeightMapFromImage(std::string sImagePath);
-   // void ReleaseHeightmap();
 
     void RenderHeightmap( glm::mat4 projection_mat,
 				 glm::mat4 view_mat);
 
-    //void SetRenderSize(float fQuadSize, float fHeight);
-    //void SetRenderSize(float fRenderX, float fHeight, float fRenderZ);
-
-    //int GetNumHeightmapRows();
-    //int GetNumHeightmapCols();
-
     void initIndices(int size);
 
-    static Shader* GetShaderProgram();
+    uint getRows(void);
 
-
+    uint getCols(void);
 
 private:
 
@@ -52,6 +43,8 @@ private:
     std::vector<float> data_;
 
     Shader shader_;
+
+    std::vector<uint> textures_;
 
     //static CShader shTerrainShaders[NUMTERRAINSHADERS];
 };

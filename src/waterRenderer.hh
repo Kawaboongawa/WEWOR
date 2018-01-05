@@ -1,10 +1,10 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <vector>
+
 #include "GLFW/glfw3.h"
 #include "glm/ext.hpp"
-
+#include <vector>
 #include "shaderHandler.hh"
 #include "tools.hh"
 
@@ -13,7 +13,7 @@ class WaterRenderer
 
 public:
 
-    WaterRenderer(Shader shader);
+    WaterRenderer(Shader shader, uint cols, uint rows);
 
     void RenderWater( glm::mat4 projection_mat,
                           glm::mat4 view_mat);
@@ -33,4 +33,5 @@ private:
     std::vector<float> data_;
 
     Shader shader_;
+    std::vector<uint> textures_;
 };

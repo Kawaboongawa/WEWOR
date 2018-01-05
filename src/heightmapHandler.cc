@@ -2,13 +2,17 @@
 
 #include <vector>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 HeightmapHandler::HeightmapHandler(Shader shader, std::string path)
     : renderScale_(glm::vec3(1.0f, 1.0f, 1.0f)),
       vbo_(0),
       ebo_(0),
       indices_(std::vector<uint>()),
       data_(std::vector<float>()),
-      shader_(shader)
+      shader_(shader),
+      textures_(std::vector<uint>())
 {
     std::cout << "initializing heighmap handler..." << std::endl;
     if (LoadHeightMapFromImage(path) == 1)
@@ -52,20 +56,22 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
 
     float textureU = static_cast<float>(cols_) * 0.1f;
     float textureV = static_cast<float>(rows_) * 0.1f;
-    for (uint i = 0; i < rows_; ++i)
-        for (uint j = 0; j < cols_; ++j)
+    for (uint x = 0; x < rows_; ++x)
+        for (uint z = 0; z < cols_; ++z)
         {
-            float scaleC = static_cast<float>(j) / static_cast<float>(cols_ - 1);
-            float scaleR = static_cast<float>(i) / static_cast<float>(rows_ - 1);
+            //float scaleC = static_cast<float>(j) / static_cast<float>(cols_ - 1);
+            //float scaleR = static_cast<float>(i) / static_cast<float>(rows_ - 1);
             float vertex_height = static_cast<float>
-                                  (*(bDataPointer + row_step * i + j * ptr_inc)) / 10;
-            vertex_data[i][j] = glm::vec3(i,
-                                          vertex_height, j);
-            data_.push_back(i);
+                                  (*(bDataPointer + row_step * x + z * ptr_inc)) / 10;
+            /*vertex_data[i][j] = glm::vec3(x,
+                                          vertex_height, j);*/
+            data_.push_back(x);
             data_.push_back(vertex_height);
-            data_.push_back(j);
-            coords_data[i][j] = glm::vec2(textureU * scaleC,
-                                          textureV * scaleR);
+            data_.push_back(z);
+            data_.push_back(x);
+            data_.push_back(z);
+            /*coords_data[i][j] = glm::vec2(textureU * scaleC,
+                                          textureV * scaleR);*/
         }
 
     // Normals are here - the heightmap contains ( (iRows-1)*(iCols-1) quads, each one containing 2 triangles, therefore array of we have 3D array)
@@ -141,14 +147,14 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
             vbo_.AddData(&coords_data[i][j], sizeof (glm::vec2)); // Add tex. coord
             vbo_.AddData(&final_normals[i][j], sizeof (glm::vec3)); // Add normal
         }
-    }
-    */
-    /*
-    for (uint i = 0; i < rows_; ++i)
-    {
-        for (uint j = 0; j < cols_; ++j)
-            data_.push_back(vertex_data[i][j]);
     }*/
+
+    /*TEXTURE Initialization*/
+    textures_.push_back(load_texturegl("assets/grass.jpg"));
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textures_[0]);
+    /*glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2); */   
 
     initIndices(rows_);
     glGenVertexArrays(1, &vao_);
@@ -165,22 +171,10 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(uint), &indices_[0], GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof (float), 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (float), 0);
     glEnableVertexAttribArray(0);
-    /*glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
-                          2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
-    // Normal vectors
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,
-                          2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3)+sizeof(glm::vec2)));
-    */
-
-
-    // Vertex positions
-    //glEnableVertexAttribArray(0);
-    //ebo_.BindVBO(GL_ELEMENT_ARRAY_BUFFER);
-    //ebo_.UploadDataToGPU(GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void *)(sizeof (float) * 3));
+    glEnableVertexAttribArray(1);
     std::cout << "heightmap initialized" << std::endl;
     return 0;
 }
@@ -188,6 +182,9 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
 void HeightmapHandler::RenderHeightmap(glm::mat4 projection_mat,
                                        glm::mat4 view_mat)
 {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textures_[0]);
+    
     shader_.use();
 
     shader_.setMat4("projection", projection_mat);
@@ -197,17 +194,11 @@ void HeightmapHandler::RenderHeightmap(glm::mat4 projection_mat,
     model = glm::rotate(model, glm::radians(0.0f),
 			glm::vec3(1.0f, 0.0f, 0.0f));
     shader_.setMat4("model", model);
-    /*
-    shader_.setFloat("fRenderHeight", renderScale_.y);
-    shader_.setFloat("fMaxTextureU", float(cols_) * 0.1f);
-    shader_.setFloat("fMaxTextureV", float(rows_) * 0.1f);
+    
+    //GRASS
+    shader_.setInt("texture1", 0);
 
-    shader_.setMat4("HeightmapScaleMatrix", glm::scale(glm::mat4(1.0), glm::vec3(renderScale_)));
-    */
-    // Now we're ready to render - we are drawing set of triangle strips using one call, but we g otta enable primitive restart
     glBindVertexArray(vao_);
-    //glEnable(GL_PRIMITIVE_RESTART);
-    //glPrimitiveRestartIndex(rows_ * cols_);
 
     glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
 }
@@ -227,4 +218,14 @@ void HeightmapHandler::initIndices(int size)
             indices_.push_back(start + size);
         }
     }
+}
+
+ uint HeightmapHandler::getRows(void)
+ {
+     return rows_;
+ }
+
+uint HeightmapHandler::getCols(void)
+{
+    return cols_;
 }
