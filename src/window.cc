@@ -14,6 +14,12 @@ Window::~Window()
     glfwDestroyWindow(window_);
 }
 
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
 int Window::init_render()
 {
     if (!glfwInit())
@@ -32,6 +38,11 @@ int Window::init_render()
         return 1;
     }
     glfwMakeContextCurrent(window_);
+    glfwSetFramebufferSizeCallback(window_, framebufferSizeCallback);
+    glfwSetCursorPosCallback(window_, &Input::mouse_callback);
+    glfwSetScrollCallback(window_, &Input::scroll_callback);
+    glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 
     camera_ = new Camera(glm::vec3(0.0f, 50.0f, 0.0f),
                          glm::vec3(0.0f, 1.0f, 0.0f), 45.0f, 0.f);
@@ -61,7 +72,11 @@ int Window::render_loop(void)
 
         // input
         input.process_input(window_);
-        d_->draw();
+
+        //draw
+    	glClearColor(0.35f, 0.35f, 0.35f, 1.0f);
+    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        d_->draw(camera_, screenWidth_, screenHeight_);
         glfwSwapBuffers(window_);
         glfwPollEvents();
     }

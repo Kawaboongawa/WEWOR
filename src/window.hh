@@ -11,7 +11,7 @@ class Window
     ~Window();
     int init_render(void);
     int render_loop(void);
-    
+   
   private:
 
     const int screenWidth_;

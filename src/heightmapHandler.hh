@@ -5,49 +5,53 @@
 
 #include <glad/glad.h>
 #include "GLFW/glfw3.h"
-#include <glm/glm.hpp>
+#include "glm/ext.hpp"
 
 #include "shaderHandler.hh"
 #include "tools.hh"
+#include "vertexBufferObject.hh"
+
+class HeightmapHandler
+{
+public:
+
+    HeightmapHandler(Shader shader, std::string path);
+
+    // static void ReleaseTerrainShaderProgram();
+
+    int LoadHeightMapFromImage(std::string sImagePath);
+   // void ReleaseHeightmap();
+
+    void RenderHeightmap( glm::mat4 projection_mat,
+				 glm::mat4 view_mat);
+
+    //void SetRenderSize(float fQuadSize, float fHeight);
+    //void SetRenderSize(float fRenderX, float fHeight, float fRenderZ);
+
+    //int GetNumHeightmapRows();
+    //int GetNumHeightmapCols();
+
+    void initIndices(int size);
+
+    static Shader* GetShaderProgram();
 
 
-class HeightmapHandler 
-{ 
-public: 
 
-   HeightmapHandler();
-  
-   static bool LoadTerrainShaderProgram(); 
-   static void ReleaseTerrainShaderProgram(); 
+private:
 
-   int LoadHeightMapFromImage(std::string sImagePath); 
-   void ReleaseHeightmap(); 
+    uint rows_;
+    uint cols_;
 
-   void RenderHeightmap(); 
+    glm::vec3 renderScale_;
 
-   void SetRenderSize(float fQuadSize, float fHeight); 
-   void SetRenderSize(float fRenderX, float fHeight, float fRenderZ); 
+    uint vao_;
+    uint vbo_;
+    uint ebo_;
 
-   int GetNumHeightmapRows(); 
-   int GetNumHeightmapCols(); 
+    std::vector<uint> indices_;
+    std::vector<glm::vec3> data_;
 
-   static Shader* GetShaderProgram(); 
+    Shader shader_;
 
- 
-
-private: 
-   uint vao_; 
-
-   bool loaded_; 
-   bool shaderProgramLoaded_; 
-   int rows_; 
-   int cols_; 
-
-   glm::vec3 renderScale_; 
-
-   uint heightmapDatavbo_; 
-   uint heightmapIndicesvbo_; 
-
-   static Shader spTerrain_; 
-   //static CShader shTerrainShaders[NUMTERRAINSHADERS]; 
+    //static CShader shTerrainShaders[NUMTERRAINSHADERS];
 };
