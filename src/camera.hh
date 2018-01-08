@@ -37,6 +37,8 @@ public:
     virtual void process_mouse_scroll(float yoffset);
     virtual void process_mouse_movement(float xoffset, float yoffset,
 					GLboolean constrain_pitch = true);
+    virtual void invert_pitch();
+    virtual void addPosY(float val);
     virtual void print_debug();
 
 protected:

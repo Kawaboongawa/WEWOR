@@ -15,12 +15,20 @@ class DrawHandler
 {
 public:
 
-    DrawHandler(void);
-    void draw(Camera* camera, uint width, uint height);
+    DrawHandler(uint width, uint height);
+    void draw(Camera* camera, glm::vec4 plane, bool render_water = false);
+
+/**
+ * GETTERS/SETTERS
+**/
+
+WaterRenderer& getWaterRenderer();
 
 private:
 
     HeightmapHandler heightmap_;
     WaterRenderer waterRenderer_;
     Skybox skybox_;
+    uint screenWidth_;
+    uint screenHeight_;
 };

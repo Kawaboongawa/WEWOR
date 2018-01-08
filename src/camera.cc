@@ -116,6 +116,22 @@ void Camera::update_vectors()
     up_ = glm::normalize(glm::cross(right_, target_));
 }
 
+void Camera::invert_pitch()
+{
+    pitch_ = -pitch_;
+    /*glm::vec3 front;
+    front.x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+    front.y = sin(glm::radians(pitch_));
+    front.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+    target_ = glm::normalize(front);*/
+    update_vectors();
+}
+
+void Camera::addPosY(float val)
+{
+    position_.y += val;
+}
+
 void Camera::print_debug()
 {
     std::cout << "position: " << position_.x << " "

@@ -53,9 +53,9 @@ int Window::init_render()
         return 1;
     }
 
-    glEnable(GL_DEPTH_TEST);  
+    glEnable(GL_DEPTH_TEST);
 
-    d_ = new DrawHandler();
+    d_ = new DrawHandler(screenWidth_, screenHeight_);
     return 0;
 }
 
@@ -64,6 +64,7 @@ int Window::render_loop(void)
     auto& input = Input::get_instance();
     while (!glfwWindowShouldClose(window_))
     {
+        glEnable(GL_CLIP_DISTANCE0);
         if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window_, GL_TRUE);
 
@@ -76,9 +77,32 @@ int Window::render_loop(void)
         input.process_input(window_);
 
         //draw
-    	glClearColor(0.35f, 0.35f, 0.35f, 1.0f);
-    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        d_->draw(camera_, screenWidth_, screenHeight_);
+        glClearColor(0.35f, 0.35f, 0.35f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        d_->getWaterRenderer().bindReflectionFrameBuffer();
+        //Render reflection texture
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        float distance = 2 * (camera_->get_view_pos().y
+                              - static_cast<float>(d_->getWaterRenderer().getWaterHeight()));
+
+        camera_->addPosY(-distance);
+        camera_->invert_pitch();
+        d_->draw(camera_, glm::vec4(0, 1, 0, -(static_cast<float>(
+                                        d_->getWaterRenderer().getWaterHeight())) - 0.05f));
+        camera_->addPosY(distance);
+        camera_->invert_pitch();
+
+        //Render refraction texture
+        d_->getWaterRenderer().bindRefractionFrameBuffer();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        d_->draw(camera_, glm::vec4(0, -1, 0, static_cast<float>(
+                     d_->getWaterRenderer().getWaterHeight()) - 0.05f));
+
+        glDisable(GL_CLIP_DISTANCE0);
+        d_->getWaterRenderer()
+        .unbindCurrentFrameBuffer(screenWidth_, screenHeight_);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+         d_->draw(camera_, glm::vec4(0, -1, 0, 100), true);
         glfwSwapBuffers(window_);
         glfwPollEvents();
     }

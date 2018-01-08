@@ -54,8 +54,6 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
     std::vector< std::vector< glm::vec2> >
     coords_data(rows_, std::vector<glm::vec2>(cols_));
 
-    float textureU = static_cast<float>(cols_) * 0.1f;
-    float textureV = static_cast<float>(rows_) * 0.1f;
     for (uint x = 0; x < rows_; ++x)
         for (uint z = 0; z < cols_; ++z)
         {
@@ -154,7 +152,7 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures_[0]);
     /*glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture2); */   
+    glBindTexture(GL_TEXTURE_2D, texture2); */
 
     initIndices(rows_);
     glGenVertexArrays(1, &vao_);
@@ -180,11 +178,11 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
 }
 
 void HeightmapHandler::RenderHeightmap(glm::mat4 projection_mat,
-                                       glm::mat4 view_mat)
+                                       glm::mat4 view_mat, glm::vec4 plane)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures_[0]);
-    
+
     shader_.use();
 
     shader_.setMat4("projection", projection_mat);
@@ -192,9 +190,9 @@ void HeightmapHandler::RenderHeightmap(glm::mat4 projection_mat,
     glm::mat4 model;
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
     model = glm::rotate(model, glm::radians(0.0f),
-			glm::vec3(1.0f, 0.0f, 0.0f));
+                        glm::vec3(1.0f, 0.0f, 0.0f));
     shader_.setMat4("model", model);
-    
+    shader_.setVec4("plane", plane);
     //GRASS
     shader_.setInt("texture1", 0);
 
@@ -220,10 +218,10 @@ void HeightmapHandler::initIndices(int size)
     }
 }
 
- uint HeightmapHandler::getRows(void)
- {
-     return rows_;
- }
+uint HeightmapHandler::getRows(void)
+{
+    return rows_;
+}
 
 uint HeightmapHandler::getCols(void)
 {

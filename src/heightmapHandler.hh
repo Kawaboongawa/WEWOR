@@ -20,7 +20,7 @@ public:
     int LoadHeightMapFromImage(std::string sImagePath);
 
     void RenderHeightmap( glm::mat4 projection_mat,
-				 glm::mat4 view_mat);
+				 glm::mat4 view_mat, glm::vec4 plane);
 
     void initIndices(int size);
 
@@ -46,5 +46,4 @@ private:
 
     std::vector<uint> textures_;
 
-    //static CShader shTerrainShaders[NUMTERRAINSHADERS];
 };
