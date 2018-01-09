@@ -37,7 +37,8 @@ public:
     Model(std::string const &path, Shader shader, bool gamma = false);
 
     // draws the model, and thus all its meshes
-    void draw(glm::mat4 projection_mat, glm::mat4 view_mat, glm::vec4 plane, glm::vec3 position);
+    void draw(glm::mat4 projection_mat, glm::mat4 view_mat, glm::vec4 plane,
+        glm::vec3 position, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f));
 
 private:
     Shader shader_;

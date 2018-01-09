@@ -13,7 +13,8 @@ DrawHandler::DrawHandler(uint width, uint height)
   waterRenderer_(WaterRenderer(Shader("shaders/water.vs", "shaders/water.fs"), 
   heightmap_.getCols(), heightmap_.getRows(), width, height)),
   //skybox_(Skybox::getSkybox()),
-  tree_(Tree("assets/tree/Tree.obj", heightmap_,Shader("shaders/1.model_loading.vs", "shaders/1.model_loading.fs"))),
+  tree_(Tree("assets/tree/Tree.obj", "assets/seaweed/seaweedgate.obj",
+        heightmap_,Shader("shaders/1.model_loading.vs", "shaders/1.model_loading.fs"))),
   screenWidth_(width),
   screenHeight_(height)
 {}
