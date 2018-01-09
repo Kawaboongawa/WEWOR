@@ -148,7 +148,7 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
     }*/
 
     /*TEXTURE Initialization*/
-    textures_.push_back(loadTexturegl("assets/grass.jpg"));
+    textures_.push_back(loadTexturegl("assets/sand.jpg"));
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures_[0]);
     /*glActiveTexture(GL_TEXTURE1);

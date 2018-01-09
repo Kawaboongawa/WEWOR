@@ -10,7 +10,8 @@ WaterRenderer::WaterRenderer(Shader shader, uint cols, uint rows,
           data_(std::vector<float>()),
           shader_(shader),
           windowWidth_(width),
-          WindowHeight_(height)
+          WindowHeight_(height),
+          moveFactor_(0)
 {
 
     for (uint z = 0; z < rows_; ++z)
@@ -98,24 +99,39 @@ WaterRenderer::WaterRenderer(Shader shader, uint cols, uint rows,
     glViewport(0, 0, width, height);
 
     /*TEXTURE Initialization*/
-    //textures_.push_back(loadTexturegl("assets/water.jpg"));
-
+    dudvTexture_ = loadTexturegl("assets/water-dudv2.jpg");
+    normalTexture_ = loadTexturegl("assets/water-normal2.jpg");
+    
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, reflecTexture_);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, refracTexture_);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, dudvTexture_);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, normalTexture_);
 }
 
 void WaterRenderer::RenderWater(glm::mat4 projection_mat,
-                                glm::mat4 view_mat, glm::vec4 plane)
+                                glm::mat4 view_mat,
+                                glm::vec4 plane,
+                                glm::vec3 camera_pos)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, reflecTexture_);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, refracTexture_);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, dudvTexture_);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, normalTexture_);
 
     shader_.use();
 
+    moveFactor_ += waveSpeed_ * Input::deltaTime;
+    if (moveFactor_ > 1.0f)
+        moveFactor_ = 0.0f;
+    shader_.setFloat("moveFactor", moveFactor_);
     shader_.setMat4("projection", projection_mat);
     shader_.setMat4("view", view_mat);
     glm::mat4 model;
@@ -127,7 +143,9 @@ void WaterRenderer::RenderWater(glm::mat4 projection_mat,
     //Water
     shader_.setInt("reflecTexture", 0);
     shader_.setInt("refracTexture", 1);
-
+    shader_.setInt("dudvMap", 2);
+    shader_.setInt("normalMap", 3);
+    shader_.setVec3("cameraPosition", camera_pos);
     glBindVertexArray(vao_);
 
     glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
@@ -176,11 +194,11 @@ void WaterRenderer::initIndices(int size)
     }
 }
 
-    /**
-     * GETTERS/SETTERS
-     **/
+/**
+ * GETTERS/SETTERS
+ **/
 
-    uint WaterRenderer::getWaterHeight()
-    {
-        return waterHeight_;
-    }
+uint WaterRenderer::getWaterHeight()
+{
+    return waterHeight_;
+}

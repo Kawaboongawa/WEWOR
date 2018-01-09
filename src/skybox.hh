@@ -14,12 +14,18 @@ class Skybox
 {
 public:
 
-    Skybox(Shader shader);
+    static Skybox& getSkybox(void);
+
+    void loadSkybox(void);
 
     void RenderSkybox(glm::mat4 projection_mat,
 				 glm::mat4 view_mat);
 
+    void changeSkybox(void);
+
 private:
+
+    Skybox(Shader shader);
 
     uint rows_;
     uint cols_;
@@ -28,6 +34,7 @@ private:
     uint vbo_;
     uint ebo_;
 
+
     std::vector<uint> indices_;
     std::vector<float> data_;
 
@@ -35,4 +42,5 @@ private:
 
     uint texture_;
 
+    uint nsky_;
 };

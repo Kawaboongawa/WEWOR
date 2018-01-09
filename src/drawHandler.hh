@@ -16,6 +16,7 @@ class DrawHandler
 public:
 
     DrawHandler(uint width, uint height);
+    ~DrawHandler(void);
     void draw(Camera* camera, glm::vec4 plane, bool render_water = false);
 
 /**
@@ -28,7 +29,7 @@ private:
 
     HeightmapHandler heightmap_;
     WaterRenderer waterRenderer_;
-    Skybox skybox_;
+    //Skybox skybox_;
     uint screenWidth_;
     uint screenHeight_;
 };

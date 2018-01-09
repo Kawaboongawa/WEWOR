@@ -1,5 +1,6 @@
 #include "input.hh"
 #include <iostream>
+#include "skybox.hh"
 
 float Input::lastX_ = 0.f;
 float Input::lastY_ = 0.f;
@@ -36,7 +37,6 @@ void Input::process_input(GLFWwindow *window)
         glfwSetWindowShouldClose(window, true);
         terminate_ = true;
     }
-
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         camera->boosted(100.0f);
     else
@@ -53,6 +53,11 @@ void Input::process_input(GLFWwindow *window)
         camera->process_keyboard(Camera::Camera_movement::DOWN, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         camera->process_keyboard(Camera::Camera_movement::UP, deltaTime);
+    static int old_action = GLFW_RELEASE;
+    int action = glfwGetKey(window, GLFW_KEY_ENTER);
+    if (action == GLFW_RELEASE && old_action == GLFW_PRESS)
+        Skybox::getSkybox().changeSkybox();
+    old_action = action;
 }
 
 void Input::mouse_callback(GLFWwindow* window, double xpos, double ypos)

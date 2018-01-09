@@ -4,9 +4,12 @@
 
 #include "GLFW/glfw3.h"
 #include "glm/ext.hpp"
+
 #include <vector>
+
 #include "shaderHandler.hh"
 #include "tools.hh"
+#include "input.hh"
 
 class WaterRenderer
 {
@@ -19,7 +22,9 @@ public:
     ~WaterRenderer();
 
     void RenderWater( glm::mat4 projection_mat,
-                      glm::mat4 view_mat, glm::vec4 plane);
+                      glm::mat4 view_mat, 
+                      glm::vec4 plane,
+                      glm::vec3 camera_pos);
 
     void initIndices(int size);
 
@@ -56,10 +61,13 @@ private:
     uint fboRefrac_;
     uint refracTexture_;
     uint refracDepthTexture_;
-
+    uint dudvTexture_;
+    uint normalTexture_;
 
     uint windowWidth_;
     uint WindowHeight_;
+
+    float moveFactor_;
 
     const int reflectionWidth_ = 320;
     const int reflectionHeight_ = 180;
@@ -68,4 +76,8 @@ private:
     const int refractionHeight_ = 720;
 
     const int waterHeight_ = 10;
+
+    const float waveSpeed_ = 0.03f;
+
+
 };
