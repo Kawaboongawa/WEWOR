@@ -28,8 +28,7 @@ int Window::init_render()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     window_ = glfwCreateWindow(screenWidth_, screenHeight_, "OpenGL", nullptr,
                                nullptr); // Windowed
-    //GLFWwindow *window = glfwCreateWindow(
-    //                         800, 600, "OpenGL", glfwGetPrimaryMonitor(), nullptr); // Fullscreen
+    //window_ = glfwCreateWindow(800, 600, "OpenGL", glfwGetPrimaryMonitor(), nullptr); // Fullscreen
     if (window_ == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;

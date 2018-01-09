@@ -60,7 +60,7 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
             //float scaleC = static_cast<float>(j) / static_cast<float>(cols_ - 1);
             //float scaleR = static_cast<float>(i) / static_cast<float>(rows_ - 1);
             float vertex_height = static_cast<float>
-                                  (*(bDataPointer + row_step * x + z * ptr_inc)) / 10;
+                                  (*(bDataPointer + row_step * x + z * ptr_inc)) / 7;
             /*vertex_data[i][j] = glm::vec3(x,
                                           vertex_height, j);*/
             data_.push_back(x);

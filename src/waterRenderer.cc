@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+const int WaterRenderer::waterHeight_ = 15;
+const float WaterRenderer::waveSpeed_ = 0.03;
+
 WaterRenderer::WaterRenderer(Shader shader, uint cols, uint rows,
                              uint width, uint height)
     :     rows_(rows),

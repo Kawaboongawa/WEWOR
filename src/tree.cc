@@ -4,8 +4,8 @@
 #include "tree.hh"
 
 // probability to have a tree on a tile in percent
-#define TREE_PROBA 0.1
-#define SEAWEED_PROBA 0
+#define TREE_PROBA 0.05
+#define SEAWEED_PROBA 0.01
 
 Tree::Tree(std::string const &path, std::string const &path2,
     HeightmapHandler heightMapHandler, Shader shader, bool gamma)

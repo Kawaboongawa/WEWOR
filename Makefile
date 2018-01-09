@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -std=c++14 -pedantic  -g
+CXXFLAGS = -Wall -std=c++14 -pedantic -O3
 LDFLAGS = -lglfw3 -lGL -lm -ldl -lXinerama -lXrandr -lXi \
 -lXcursor -lX11 -lXxf86vm -lpthread -lglut -lGL -lGLU -lfreeimage -lassimp
 

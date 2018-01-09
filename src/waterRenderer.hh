@@ -69,15 +69,15 @@ private:
 
     float moveFactor_;
 
-    const int reflectionWidth_ = 320;
-    const int reflectionHeight_ = 180;
+    const int reflectionWidth_ = 1280;
+    const int reflectionHeight_ = 720;
 
     const int refractionWidth_ = 1280;
     const int refractionHeight_ = 720;
 
-    static const int waterHeight_ = 10;
+    static const int waterHeight_;
 
-    const float waveSpeed_ = 0.03f;
+    static const float waveSpeed_;
 
 
 };

@@ -14,10 +14,11 @@ uniform vec3 lighColor;
 
 uniform float moveFactor;
 
-const float waveStrength = 0.02;
+const float waveStrength = 0.007;
 
 void main()
 {
+    
     vec2 ndc = (clipSpace.xy / clipSpace.w) / 2.0 + 0.5;
     vec2 refracTexCoord = vec2(ndc.x, ndc.y);
     vec2 reflecTexCoord = vec2(ndc.x, -ndc.y);
@@ -32,10 +33,14 @@ void main()
     reflecTexCoord += finalDistortion; 
     reflecTexCoord.x = clamp(reflecTexCoord.x, 0.001, 0.999);
     reflecTexCoord.y = clamp(reflecTexCoord.y, -0.999, -0.001);
-
+    
     vec4 refracColor = texture(refracTexture, refracTexCoord);
     vec4 reflecColor = texture(reflecTexture, reflecTexCoord);
 
+
+    //FragColor = mix(reflecColor, refracColor, 0.5);
+
+    
     //FRESNEL EFFECT
     vec3 viewVector = normalize(toCameraVector);
     float refractiveFactor = dot(viewVector, vec3(0.0, 1.0, 0.0));
@@ -47,6 +52,6 @@ void main()
 
     FragColor = mix(reflecColor, refracColor, refractiveFactor);
     //add blue color to water
-    FragColor = mix(FragColor, vec4 (0.0, 0.3, 0.5, 1.0), 0.2);
+    //FragColor = mix(FragColor, vec4 (0.0, 0.3, 0.5, 1.0), 0.2);
     //FragColor = normalMapColor;
 }
