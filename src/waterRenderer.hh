@@ -38,7 +38,7 @@ public:
      * GETTERS/SETTERS
      **/
 
-    uint getWaterHeight();
+    static uint getWaterHeight();
 
 private:
 
@@ -75,7 +75,7 @@ private:
     const int refractionWidth_ = 1280;
     const int refractionHeight_ = 720;
 
-    const int waterHeight_ = 10;
+    static const int waterHeight_ = 10;
 
     const float waveSpeed_ = 0.03f;
 

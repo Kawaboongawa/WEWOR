@@ -1,12 +1,12 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++14 -pedantic  -g
 LDFLAGS = -lglfw3 -lGL -lm -ldl -lXinerama -lXrandr -lXi \
--lXcursor -lX11 -lXxf86vm -lpthread -lglut -lGL -lGLU -lfreeimage
+-lXcursor -lX11 -lXxf86vm -lpthread -lglut -lGL -lGLU -lfreeimage -lassimp
 
 DIR = src
 SOURCE = ${addprefix ${DIR}/, glad.c main.cc drawHandler.cc shaderHandler.cc \
 window.cc camera.cc input.cc heightmapHandler.cc vertexBufferObject.cc \
-tools.cc waterRenderer.cc skybox.cc}
+tools.cc waterRenderer.cc skybox.cc mesh.cc model.cc tree.cc}
 
 INC_DIR = inc/
 OBJ = $(SOURCE:%.cc=%.o)

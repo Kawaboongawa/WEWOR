@@ -10,6 +10,7 @@
 #include "skybox.hh"
 #include "shaderHandler.hh"
 #include "camera.hh"
+#include "tree.hh"
 
 class DrawHandler
 {
@@ -30,6 +31,7 @@ private:
     HeightmapHandler heightmap_;
     WaterRenderer waterRenderer_;
     //Skybox skybox_;
+    Tree tree_;
     uint screenWidth_;
     uint screenHeight_;
 };

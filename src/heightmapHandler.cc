@@ -187,6 +187,9 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
 void HeightmapHandler::RenderHeightmap(glm::mat4 projection_mat,
                                        glm::mat4 view_mat, glm::vec4 plane)
 {
+  // std::cout << "rows " << rows_ << std::endl;
+  // std::cout << "columns " << cols_ << std::endl;
+  // std::cout << "size " << data_.size() << std::endl;
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures_[0]);
     glActiveTexture(GL_TEXTURE1);
@@ -234,4 +237,9 @@ uint HeightmapHandler::getRows(void)
 uint HeightmapHandler::getCols(void)
 {
     return cols_;
+}
+
+float HeightmapHandler::getHeight(int x, int y)
+{
+  return data_[(x * cols_ + y) * 5 + 1];
 }

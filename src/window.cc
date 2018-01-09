@@ -1,5 +1,5 @@
 #include "window.hh"
-
+#include "model.hh"
 #include <iostream>
 
 Window::Window(int width, int height)

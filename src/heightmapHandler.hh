@@ -27,6 +27,7 @@ public:
     uint getRows(void);
 
     uint getCols(void);
+    float getHeight(int x, int y);
 
 private:
 

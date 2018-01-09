@@ -4,6 +4,7 @@
 
 int main()
 {
+  srand (time(NULL));
   Window w(1600, 900);
   if (w.init_render())
     return 1;
