@@ -102,8 +102,8 @@ WaterRenderer::WaterRenderer(Shader shader, uint cols, uint rows,
     glViewport(0, 0, width, height);
 
     /*TEXTURE Initialization*/
-    dudvTexture_ = loadTexturegl("assets/water-dudv2.jpg");
-    normalTexture_ = loadTexturegl("assets/water-normal2.jpg");
+    dudvTexture_ = loadTexturegl("assets/water-dudv.jpg");
+    normalTexture_ = loadTexturegl("assets/water-normal.jpg");
     
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, reflecTexture_);
@@ -113,6 +113,9 @@ WaterRenderer::WaterRenderer(Shader shader, uint cols, uint rows,
     glBindTexture(GL_TEXTURE_2D, dudvTexture_);
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, normalTexture_);
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, refracDepthTexture_);
+
 }
 
 void WaterRenderer::RenderWater(glm::mat4 projection_mat,
@@ -128,6 +131,10 @@ void WaterRenderer::RenderWater(glm::mat4 projection_mat,
     glBindTexture(GL_TEXTURE_2D, dudvTexture_);
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, normalTexture_);
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, refracDepthTexture_);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     shader_.use();
 
@@ -148,10 +155,13 @@ void WaterRenderer::RenderWater(glm::mat4 projection_mat,
     shader_.setInt("refracTexture", 1);
     shader_.setInt("dudvMap", 2);
     shader_.setInt("normalMap", 3);
+    shader_.setInt("depthMap", 4);
     shader_.setVec3("cameraPosition", camera_pos);
     glBindVertexArray(vao_);
 
     glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
+
+    glDisable(GL_BLEND);
 }
 
 WaterRenderer::~WaterRenderer()

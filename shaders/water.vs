@@ -18,22 +18,13 @@ out vec3 toCameraVector;
 const float tiling = 6.0;
 
 void main() 
-{ 
-  
+{  
   gl_ClipDistance[0] = 1;
   vec3 FragPos = vec3(model * vec4(inPos, 1.0));
   vec4 world_position = vec4(FragPos, 1.0);
   vec4 position_relative_to_cam = view * world_position;
   clipSpace = projection * position_relative_to_cam;
   gl_Position = clipSpace;
-  textureCoords = inPos.xz / 32.0f;
+  textureCoords = inPos.xz / 512.f;
   toCameraVector = cameraPosition - world_position.xyz;
-  /*gl_ClipDistance[0] = 1;
-  vec3 FragPos = vec3(model * vec4(inPos, 1.0));
-  vec4 world_position = vec4(FragPos, 1.0);
-  vec4 position_relative_to_cam = view * world_position;
-  clipSpace = projection * position_relative_to_cam;
-  gl_Position = clipSpace;
-  textureCoords = vec2(inPos.x / 2.0 + 0.5, inPos.y / 2.0 + 0.5) * tiling;
-  toCameraVector = cameraPosition - world_position.xyz;*/
-}
+ }

@@ -75,7 +75,6 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
             if (vertex_height > maxHeight_)
                 this->maxHeight_ = vertex_height;
         }
-    std::cout << maxHeight_ << std::endl;
 
     // Normals are here - the heightmap contains ( (iRows-1)*(iCols-1) quads, each one containing 2 triangles, therefore array of we have 3D array)
     std::vector< std::vector<glm::vec3> > normals[2];
