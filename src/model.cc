@@ -15,7 +15,7 @@ void Model::draw(glm::mat4 projection_mat, glm::mat4 view_mat, glm::vec4 plane,
   // glm::mat4 view = camera.GetViewMatrix();
   shader_.setMat4("projection", projection_mat);
   shader_.setMat4("view", view_mat);
-
+  shader_.setVec4("plane", plane);
   // render the loaded model
   glm::mat4 model;
   model = glm::translate(model, position); // translate it down so it's at the center of the scene
