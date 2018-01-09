@@ -53,7 +53,7 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
     vertex_data(rows_, std::vector<glm::vec3>(cols_));
     std::vector< std::vector< glm::vec2> >
     coords_data(rows_, std::vector<glm::vec2>(cols_));
-
+    maxHeight_ = 0.0f;
     for (uint x = 0; x < rows_; ++x)
         for (uint z = 0; z < cols_; ++z)
         {
@@ -70,7 +70,12 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
             data_.push_back(z);
             /*coords_data[i][j] = glm::vec2(textureU * scaleC,
                                           textureV * scaleR);*/
+
+
+            if (vertex_height > maxHeight_)
+                this->maxHeight_ = vertex_height;
         }
+    std::cout << maxHeight_ << std::endl;
 
     // Normals are here - the heightmap contains ( (iRows-1)*(iCols-1) quads, each one containing 2 triangles, therefore array of we have 3D array)
     std::vector< std::vector<glm::vec3> > normals[2];
@@ -102,7 +107,6 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
             normals[0][i][j] = glm::normalize(triangleNorm0);
             normals[1][i][j] = glm::normalize(triangleNorm1);
         }
-
     std::vector< std::vector<glm::vec3> > final_normals =
         std::vector< std::vector<glm::vec3> >(rows_, std::vector<glm::vec3>(cols_));
     for (uint i = 0; i < rows_; ++i)
@@ -149,8 +153,11 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
 
     /*TEXTURE Initialization*/
     textures_.push_back(loadTexturegl("assets/sand.jpg"));
+    textures_.push_back(loadTexturegl("assets/grass.jpg"));
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures_[0]);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, textures_[1]);
     /*glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2); */
 
@@ -182,7 +189,8 @@ void HeightmapHandler::RenderHeightmap(glm::mat4 projection_mat,
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures_[0]);
-
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, textures_[1]);
     shader_.use();
 
     shader_.setMat4("projection", projection_mat);
@@ -193,9 +201,9 @@ void HeightmapHandler::RenderHeightmap(glm::mat4 projection_mat,
                         glm::vec3(1.0f, 0.0f, 0.0f));
     shader_.setMat4("model", model);
     shader_.setVec4("plane", plane);
-    //GRASS
+    shader_.setFloat("renderHeight", maxHeight_);
     shader_.setInt("texture1", 0);
-
+    shader_.setInt("texture2", 1);
     glBindVertexArray(vao_);
 
     glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);

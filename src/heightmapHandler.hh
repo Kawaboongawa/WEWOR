@@ -44,6 +44,10 @@ private:
 
     Shader shader_;
 
+    float maxHeight_;
+
     std::vector<uint> textures_;
+
+   
 
 };
