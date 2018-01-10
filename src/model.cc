@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "model.hh"
 
 Model::Model(std::string const &path, Shader shader, bool gamma)
@@ -7,8 +9,14 @@ Model::Model(std::string const &path, Shader shader, bool gamma)
   loadModel(path);
 }
 
+static float angleBetween(glm::vec3 a,
+    glm::vec3 b = glm::vec3(0.0f, 0.0f, 0.0f))
+{
+  return atan2(a.x, a.z);
+}
+
 void Model::draw(glm::mat4 projection_mat, glm::mat4 view_mat, glm::vec4 plane,
-    glm::vec3 position, glm::vec3 scale)
+    glm::vec3 position, glm::vec3 scale, glm::vec3 rotation)
 {
   shader_.use();
   // view/projection transformations
@@ -20,6 +28,7 @@ void Model::draw(glm::mat4 projection_mat, glm::mat4 view_mat, glm::vec4 plane,
   glm::mat4 model;
   model = glm::translate(model, position); // translate it down so it's at the center of the scene
   model = glm::scale(model, scale);	// it's a bit too big for our scene, so scale it down
+  model = glm::rotate(model, angleBetween(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
   shader_.setMat4("model", model);
 
   for(unsigned int i = 0; i < meshes.size(); i++)

@@ -15,6 +15,8 @@ DrawHandler::DrawHandler(uint width, uint height)
   //skybox_(Skybox::getSkybox()),
   tree_(Tree("assets/tree/Tree.obj", "assets/seaweed/seaweedgate.obj",
         heightmap_,Shader("shaders/1.model_loading.vs", "shaders/1.model_loading.fs"))),
+  fish_(Fish("assets/fish/fish.obj",
+        heightmap_,Shader("shaders/1.model_loading.vs", "shaders/1.model_loading.fs"))),
   screenWidth_(width),
   screenHeight_(height)
 {}
@@ -33,6 +35,7 @@ void DrawHandler::draw(Camera* camera, glm::vec4 plane, bool render_water)
   if (render_water)
     waterRenderer_.RenderWater(projection, view, plane, camera->get_view_pos());
   tree_.draw(projection, view, plane);
+  fish_.draw(projection, view, plane);
 }
 
 /**

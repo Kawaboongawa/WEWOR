@@ -11,6 +11,7 @@
 #include "shaderHandler.hh"
 #include "camera.hh"
 #include "tree.hh"
+#include "fish.hh"
 
 class DrawHandler
 {
@@ -32,6 +33,7 @@ private:
     WaterRenderer waterRenderer_;
     //Skybox skybox_;
     Tree tree_;
+    Fish fish_;
     uint screenWidth_;
     uint screenHeight_;
 };
