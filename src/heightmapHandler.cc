@@ -66,12 +66,10 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
             data_.push_back(x);
             data_.push_back(vertex_height);
             data_.push_back(z);
-            data_.push_back(x);
-            data_.push_back(z);
+            data_.push_back(x * 0.05);
+            data_.push_back(z * 0.05);
             /*coords_data[i][j] = glm::vec2(textureU * scaleC,
                                           textureV * scaleR);*/
-
-
             if (vertex_height > maxHeight_)
                 this->maxHeight_ = vertex_height;
         }
@@ -152,7 +150,7 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
 
     /*TEXTURE Initialization*/
     textures_.push_back(loadTexturegl("assets/sand.jpg"));
-    textures_.push_back(loadTexturegl("assets/grass.jpg"));
+    textures_.push_back(loadTexturegl("assets/grass2.jpg"));
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures_[0]);
     glActiveTexture(GL_TEXTURE1);
@@ -186,9 +184,6 @@ int HeightmapHandler::LoadHeightMapFromImage(std::string image_path)
 void HeightmapHandler::RenderHeightmap(glm::mat4 projection_mat,
                                        glm::mat4 view_mat, glm::vec4 plane)
 {
-  // std::cout << "rows " << rows_ << std::endl;
-  // std::cout << "columns " << cols_ << std::endl;
-  // std::cout << "size " << data_.size() << std::endl;
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures_[0]);
     glActiveTexture(GL_TEXTURE1);
