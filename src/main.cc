@@ -5,7 +5,7 @@
 int main()
 {
   srand (time(NULL));
-  Window w(1366, 768);
+  Window w(1920, 1080);
   if (w.init_render())
     return 1;
   return w.render_loop();
